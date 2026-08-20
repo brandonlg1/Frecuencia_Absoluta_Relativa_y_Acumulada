@@ -1,0 +1,139 @@
+- Class: meta
+  Course: Estadistica_Descriptiva
+  Lesson: Frecuencia_Absoluta_Relativa_y_Acumulada
+  Author: Brandon lopez garcia 249306
+  Type: Standard
+  Organization: UACJ - Ingenieria de Software
+  Version: 2.4.5
+
+- Class: text
+  Output: Bienvenido a la practica interactiva sobre Frecuencia Absoluta, Frecuencia Relativa y Frecuencia Acumulada.
+
+- Class: text
+  Output: Este tema forma parte de la estadistica descriptiva y permite resumir cuantas veces aparece cada valor de una variable dentro de un conjunto de datos.
+
+- Class: text
+  Output: Al finalizar esta practica podras calcular e interpretar la frecuencia absoluta, la frecuencia relativa y la frecuencia acumulada de un conjunto de datos utilizando R.
+
+- Class: text
+  Output: Recuerda que una variable cualitativa toma valores que son categorias, como el tipo de error detectado en un modulo de software durante una prueba.
+
+- Class: text
+  Output: Definicion. La frecuencia absoluta es el numero de veces que se repite un valor dentro de un conjunto de datos. Se representa normalmente con la letra fi.
+
+- Class: text
+  Output: Ejemplo. Un equipo de Ingenieria de Software registro el tipo de error encontrado en 10 pruebas realizadas durante un sprint. El vector errores contiene esos resultados.
+
+- Class: cmd_question
+  Output: Crea un vector llamado errores con los valores "UI","Backend","UI","BaseDatos","UI","Backend","UI","BaseDatos","Backend","UI".
+  CorrectAnswer: errores <- c("UI","Backend","UI","BaseDatos","UI","Backend","UI","BaseDatos","Backend","UI")
+  AnswerTests: omnitest(correctExpr='errores <- c("UI","Backend","UI","BaseDatos","UI","Backend","UI","BaseDatos","Backend","UI")')
+  Hint: Utiliza el operador de asignacion y la funcion c() para crear el vector de texto.
+
+- Class: cmd_question
+  Output: Calcula la frecuencia absoluta de cada categoria del vector errores usando la funcion table().
+  CorrectAnswer: table(errores)
+  AnswerTests: omnitest(correctExpr='table(errores)')
+  Hint: La funcion table() cuenta cuantas veces aparece cada valor unico dentro del vector.
+
+- Class: mult_question
+  Output: Segun el resultado de table(errores), cual categoria tiene la mayor frecuencia absoluta?
+  AnswerChoices: UI;Backend;BaseDatos;Ninguna
+  CorrectAnswer: UI
+  AnswerTests: omnitest(correctVal='UI')
+  Hint: Observa cual valor aparece mas veces dentro del vector errores.
+
+- Class: text
+  Output: Definicion. La frecuencia relativa indica que proporcion representa cada valor respecto al total de observaciones. Se obtiene dividiendo la frecuencia absoluta entre el numero total de datos y se representa con hi.
+
+- Class: text
+  Output: Ejemplo. Si UI aparece 5 veces de un total de 10 observaciones, su frecuencia relativa es 5 dividido entre 10, es decir 0.5, lo que equivale al 50 por ciento del total.
+
+- Class: exact_question
+  Output: Si Backend aparece 3 veces en un total de 10 observaciones, cual es su frecuencia relativa expresada como decimal?
+  CorrectAnswer: 0.3
+  AnswerTests: omnitest(correctVal=0.3)
+  Hint: Divide la frecuencia absoluta de Backend entre el numero total de observaciones.
+
+- Class: cmd_question
+  Output: Calcula la frecuencia relativa de cada categoria usando prop.table(table(errores)).
+  CorrectAnswer: prop.table(table(errores))
+  AnswerTests: omnitest(correctExpr='prop.table(table(errores))')
+  Hint: La funcion prop.table() convierte una tabla de frecuencias absolutas en proporciones.
+
+- Class: mult_question
+  Output: Interpretacion. Si la frecuencia relativa de la categoria UI es 0.5, que interpretacion es correcta?
+  AnswerChoices: La mitad de los errores corresponden a UI;Todos los errores corresponden a UI;Ningun error corresponde a UI;Una cuarta parte de los errores corresponde a UI
+  CorrectAnswer: La mitad de los errores corresponden a UI
+  AnswerTests: omnitest(correctVal='La mitad de los errores corresponden a UI')
+  Hint: Recuerda que una frecuencia relativa de 0.5 equivale al 50 por ciento del total.
+
+- Class: text
+  Output: Definicion. La frecuencia acumulada indica cuantas observaciones se han contabilizado hasta cierta categoria, sumando de manera progresiva las frecuencias absolutas anteriores. Se representa con Fi.
+
+- Class: text
+  Output: Ejemplo. Si las categorias se ordenan como UI, Backend y BaseDatos con frecuencias absolutas de 5, 3 y 2, la frecuencia acumulada seria 5, luego 5 mas 3 igual a 8, y finalmente 8 mas 2 igual a 10.
+
+- Class: cmd_question
+  Output: Calcula la frecuencia acumulada del vector c(5,3,2) usando la funcion cumsum().
+  CorrectAnswer: cumsum(c(5,3,2))
+  AnswerTests: omnitest(correctExpr='cumsum(c(5,3,2))')
+  Hint: La funcion cumsum() suma de manera progresiva cada elemento con los anteriores.
+
+- Class: mult_question
+  Output: Que representa el ultimo valor de una columna de frecuencia acumulada en una tabla de frecuencias?
+  AnswerChoices: El promedio de los datos;El total de observaciones;La moda del conjunto;La varianza de los datos
+  CorrectAnswer: El total de observaciones
+  AnswerTests: omnitest(correctVal='El total de observaciones')
+  Hint: Piensa en que ocurre cuando sumas progresivamente todas las frecuencias absolutas de la tabla.
+
+- Class: text
+  Output: Interpretacion. Conocer la frecuencia acumulada permite responder preguntas como cuantos errores se han detectado hasta cierta categoria de severidad, lo cual ayuda a un equipo de desarrollo a priorizar su trabajo.
+
+- Class: text
+  Output: Definicion. En Ingenieria de Software estos conceptos se aplican al analizar reportes de errores, tickets de soporte o resultados de pruebas, ya que permiten identificar que tipo de falla ocurre con mayor frecuencia y priorizar su correccion.
+
+- Class: mult_question
+  Output: Un equipo de QA quiere saber que porcentaje de los errores reportados en el ultimo mes corresponden a fallas criticas. Que tipo de frecuencia debe calcular?
+  AnswerChoices: Frecuencia absoluta;Frecuencia relativa;Frecuencia acumulada;Ninguna de las anteriores
+  CorrectAnswer: Frecuencia relativa
+  AnswerTests: omnitest(correctVal='Frecuencia relativa')
+  Hint: Recuerda que la palabra porcentaje esta relacionada con una proporcion del total.
+
+- Class: exact_question
+  Output: Si en un reporte de 20 errores, 8 corresponden a fallas criticas, cual es la frecuencia relativa de las fallas criticas expresada como decimal?
+  CorrectAnswer: 0.4
+  AnswerTests: omnitest(correctVal=0.4)
+  Hint: Divide 8 entre 20.
+
+- Class: text
+  Output: Definicion. Una tabla de frecuencias organiza en conjunto la frecuencia absoluta, la frecuencia relativa y la frecuencia acumulada de cada categoria, facilitando la comparacion entre valores.
+
+- Class: mult_question
+  Output: Cual de las siguientes afirmaciones es correcta respecto a la frecuencia relativa?
+  AnswerChoices: Siempre es mayor a 1;La suma de todas las frecuencias relativas es igual a 1;No depende del total de datos;Solo aplica a variables numericas
+  CorrectAnswer: La suma de todas las frecuencias relativas es igual a 1
+  AnswerTests: omnitest(correctVal='La suma de todas las frecuencias relativas es igual a 1')
+  Hint: Piensa en que las frecuencias relativas representan proporciones de un total completo.
+
+- Class: cmd_question
+  Output: Une en columnas la frecuencia absoluta y la frecuencia relativa del vector errores usando cbind(table(errores), prop.table(table(errores))).
+  CorrectAnswer: cbind(table(errores), prop.table(table(errores)))
+  AnswerTests: omnitest(correctExpr='cbind(table(errores), prop.table(table(errores)))')
+  Hint: cbind() permite unir dos tablas en columnas para compararlas lado a lado.
+
+- Class: text
+  Output: Actividad integradora. Utiliza el vector errores que ya creaste al inicio de la practica para completar el siguiente ejercicio final.
+
+- Class: cmd_question
+  Output: Calcula la frecuencia acumulada de las categorias del vector errores aplicando cumsum() directamente sobre la tabla de frecuencias con cumsum(table(errores)).
+  CorrectAnswer: cumsum(table(errores))
+  AnswerTests: omnitest(correctExpr='cumsum(table(errores))')
+  Hint: Aplica cumsum() directamente sobre el resultado de table(errores), igual que hiciste antes con el vector numerico.
+
+- Class: text
+  Output: Resumen. En esta practica aprendiste que la frecuencia absoluta cuenta repeticiones, la frecuencia relativa expresa proporciones respecto al total, y la frecuencia acumulada suma progresivamente las frecuencias absolutas hasta cierta categoria.
+
+- Class: text
+  Output: Gracias por completar esta practica de Frecuencia Absoluta, Relativa y Acumulada. Continua practicando estos conceptos con distintos conjuntos de datos.
+
