@@ -1,0 +1,214 @@
+- Class: meta
+  Course: Proyecto 3 Equipo I
+  Lesson: Estimacion 2 Dos Poblaciones
+  Author: Brandon López García, Efrén Jovany Nava Alemán, Juan Carlos Coutiño Barragán
+  Type: Standard
+  Organization: UACJ - IIT - Ingenieria de Software
+  Version: 2.4.5
+
+# ------------------------------------------------------------------
+# OBJETIVO
+# ------------------------------------------------------------------
+- Class: text
+  Output: "Bienvenido a la Lección 2: Estimación para dos poblaciones. OBJETIVO: al terminar podrás estimar la diferencia entre dos medias y entre dos proporciones, construir intervalos de confianza relacionados con la varianza e interpretar correctamente los intervalos obtenidos."
+
+- Class: text
+  Output: "Contexto: tenemos las calificaciones del examen parcial de Estadística de dos turnos. El vector matutino tiene 35 calificaciones y el vector vespertino tiene 30. Cada turno representa una POBLACIÓN distinta."
+
+# --- Figura ----------------------------------------------------------
+- Class: figure
+  Output: "Observa los diagramas de caja de ambos turnos. El punto rojo es la media muestral de cada grupo."
+  Figure: grafica_turnos.R
+  FigureType: new
+
+- Class: text
+  Output: "Cuando comparamos dos poblaciones, el parámetro de interés es la DIFERENCIA de medias μ1 - μ2. Su estimador puntual es la diferencia de medias muestrales x̄1 - x̄2."
+
+# --- Opción múltiple 1 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "¿Cuál es el estimador puntual de μ1 - μ2?"
+  AnswerChoices: x̄1 - x̄2;μ1 - μ2;s1 - s2;n1 - n2
+  CorrectAnswer: x̄1 - x̄2
+  AnswerTests: "omnitest(correctVal='x̄1 - x̄2')"
+  Hint: "El estimador se calcula con las MUESTRAS, no con los parámetros."
+
+# --- Código: estimación puntual ------------------------------------
+- Class: cmd_question
+  Output: "Calcula la diferencia de medias (matutino menos vespertino) y guárdala en dif_medias."
+  CorrectAnswer: dif_medias <- mean(matutino) - mean(vespertino)
+  AnswerTests: "objeto_es('dif_medias', 'mean(matutino) - mean(vespertino)')"
+  Hint: "dif_medias <- mean(matutino) - mean(vespertino)"
+
+# --- Numérica 1 -----------------------------------------------------
+- Class: exact_question
+  Output: "¿Cuál es la estimación puntual de la diferencia de medias? Escribe dif_medias redondeado a 2 decimales."
+  CorrectAnswer: 9.38
+  AnswerTests: "num_cercano(9.38, 0.01)"
+  Hint: "Escribe dif_medias en la consola y redondea."
+
+- Class: text
+  Output: "El intervalo de confianza para μ1 - μ2 (sin suponer varianzas iguales, método de Welch) es: (x̄1 - x̄2) ± t × √(s1²/n1 + s2²/n2). La raíz es el ERROR ESTÁNDAR de la diferencia."
+
+- Class: cmd_question
+  Output: "Calcula el error estándar de la diferencia y guárdalo en ee_dif: sqrt(var(matutino)/35 + var(vespertino)/30)"
+  CorrectAnswer: ee_dif <- sqrt(var(matutino) / 35 + var(vespertino) / 30)
+  AnswerTests: "objeto_es('ee_dif', 'sqrt(var(matutino) / 35 + var(vespertino) / 30)')"
+  Hint: "Usa var() de cada grupo dividida entre su tamaño de muestra, súmalas y saca raíz con sqrt()."
+
+- Class: text
+  Output: "La función t.test() aplica automáticamente esta fórmula (incluidos los grados de libertad de Welch). Si le das DOS vectores, calcula el intervalo para la diferencia del primero menos el segundo. Con $conf.int extraes solo el intervalo."
+
+# --- PREGUNTA CON MÚLTIPLES HINTS (función en funciones/funciones_hints.R)
+- Class: cmd_question
+  Output: "Construye el intervalo de 95% para la diferencia de medias (matutino - vespertino) con t.test() y guárdalo en ic_dif."
+  CorrectAnswer: ic_dif <- t.test(matutino, vespertino)$conf.int
+  AnswerTests: test_ic_dif_medias()
+  Hint: "Necesitas t.test() con los dos grupos y extraer solo el intervalo."
+
+- Class: cmd_question
+  Output: "Escribe ic_dif para ver el intervalo."
+  CorrectAnswer: ic_dif
+  AnswerTests: "valor_es('ic_dif')"
+  Hint: "Solo escribe ic_dif"
+
+# --- Interpretación 1 -----------------------------------------------
+- Class: mult_question
+  Output: "El intervalo va de aproximadamente 4.49 a 14.27 puntos. ¿Cuál es la interpretación correcta?"
+  AnswerChoices: Con 95% de confianza, la calificación media del turno matutino es entre 4.49 y 14.27 puntos mayor que la del vespertino;Todos los estudiantes del matutino sacan entre 4.49 y 14.27 puntos más que los del vespertino;El 95% de los estudiantes del matutino supera al vespertino;La diferencia de medias muestrales es exactamente 4.49
+  CorrectAnswer: Con 95% de confianza, la calificación media del turno matutino es entre 4.49 y 14.27 puntos mayor que la del vespertino
+  AnswerTests: "omnitest(correctVal='Con 95% de confianza, la calificación media del turno matutino es entre 4.49 y 14.27 puntos mayor que la del vespertino')"
+  Hint: "El intervalo es para la DIFERENCIA DE MEDIAS poblacionales, no para estudiantes individuales."
+
+# --- Opción múltiple 2 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "Supón que en otro estudio el intervalo para μ1 - μ2 fuera (-3.2, 5.1), es decir, que contiene el 0. ¿Qué significaría?"
+  AnswerChoices: La diferencia podría ser negativa, cero o positiva, por lo que no podemos estimar cuál media es mayor;Las dos medias muestrales son iguales;El cálculo del intervalo está mal;El nivel de confianza es 0%
+  CorrectAnswer: La diferencia podría ser negativa, cero o positiva, por lo que no podemos estimar cuál media es mayor
+  AnswerTests: "omnitest(correctVal='La diferencia podría ser negativa, cero o positiva, por lo que no podemos estimar cuál media es mayor')"
+  Hint: "Piensa en qué valores de μ1 - μ2 quedan dentro del intervalo."
+
+# ------------------------------------------------------------------
+# DIFERENCIA DE PROPORCIONES
+# ------------------------------------------------------------------
+- Class: text
+  Output: "Ahora compararemos PROPORCIONES: ¿qué fracción de cada turno aprobó (calificación de 70 o más)? El intervalo para p1 - p2 es: (p̂1 - p̂2) ± z × √(p̂1(1 - p̂1)/n1 + p̂2(1 - p̂2)/n2)."
+
+- Class: cmd_question
+  Output: "Calcula la proporción de aprobados del turno matutino y guárdala en p_mat. Pista: la comparación matutino >= 70 produce TRUE/FALSE y mean() cuenta la proporción de TRUE."
+  CorrectAnswer: p_mat <- mean(matutino >= 70)
+  AnswerTests: "objeto_es('p_mat', 'mean(matutino >= 70)')"
+  Hint: "p_mat <- mean(matutino >= 70)"
+
+- Class: cmd_question
+  Output: "Haz lo mismo para el turno vespertino y guárdalo en p_ves."
+  CorrectAnswer: p_ves <- mean(vespertino >= 70)
+  AnswerTests: "objeto_es('p_ves', 'mean(vespertino >= 70)')"
+  Hint: "Cambia matutino por vespertino en la instrucción anterior."
+
+# --- Numérica 2 -----------------------------------------------------
+- Class: exact_question
+  Output: "¿Cuál es la estimación puntual de p1 - p2 (matutino menos vespertino)? Escribe el resultado con 2 decimales."
+  CorrectAnswer: 0.3
+  AnswerTests: "num_cercano(0.30, 0.005)"
+  Hint: "Calcula p_mat - p_ves en la consola."
+
+- Class: cmd_question
+  Output: "Calcula el error estándar de la diferencia de proporciones y guárdalo en ee_prop: sqrt(p_mat * (1 - p_mat) / 35 + p_ves * (1 - p_ves) / 30)"
+  CorrectAnswer: ee_prop <- sqrt(p_mat * (1 - p_mat) / 35 + p_ves * (1 - p_ves) / 30)
+  AnswerTests: "objeto_es('ee_prop', 'sqrt(0.8 * 0.2 / 35 + 0.5 * 0.5 / 30)')"
+  Hint: "Copia la fórmula con cuidado; cada fracción va dividida entre su tamaño de muestra."
+
+- Class: cmd_question
+  Output: "Construye el intervalo de 95% y guárdalo en ic_dif_prop: (p_mat - p_ves) + c(-1, 1) * qnorm(0.975) * ee_prop"
+  CorrectAnswer: ic_dif_prop <- (p_mat - p_ves) + c(-1, 1) * qnorm(0.975) * ee_prop
+  AnswerTests: "objeto_es('ic_dif_prop', '0.3 + c(-1, 1) * qnorm(0.975) * sqrt(0.8 * 0.2 / 35 + 0.5 * 0.5 / 30)', 1e-3)"
+  Hint: "Revisa los paréntesis en (p_mat - p_ves) y usa qnorm(0.975)."
+
+# --- Interpretación 2 -----------------------------------------------
+- Class: mult_question
+  Output: "El intervalo va de aproximadamente 0.077 a 0.523. ¿Cuál es la interpretación correcta?"
+  AnswerChoices: Con 95% de confianza, la proporción de aprobados del matutino es entre 7.7 y 52.3 puntos porcentuales mayor que la del vespertino;El 30% de los estudiantes del matutino aprobó;La proporción de aprobados del matutino es exactamente 52.3%;El intervalo es tan ancho que no tiene ninguna utilidad
+  CorrectAnswer: Con 95% de confianza, la proporción de aprobados del matutino es entre 7.7 y 52.3 puntos porcentuales mayor que la del vespertino
+  AnswerTests: "omnitest(correctVal='Con 95% de confianza, la proporción de aprobados del matutino es entre 7.7 y 52.3 puntos porcentuales mayor que la del vespertino')"
+  Hint: "El intervalo estima la DIFERENCIA p1 - p2 de las poblaciones. Es ancho porque las muestras son pequeñas, pero sigue siendo informativo."
+
+# ------------------------------------------------------------------
+# ESTIMACIÓN RELACIONADA CON LA VARIANZA
+# ------------------------------------------------------------------
+- Class: text
+  Output: "También podemos estimar la VARIANZA poblacional σ². Si los datos provienen de una población aproximadamente normal, el intervalo de confianza es: [(n - 1)s² / χ²(0.975) , (n - 1)s² / χ²(0.025)], donde χ² es la distribución ji-cuadrada con n - 1 grados de libertad."
+
+- Class: cmd_question
+  Output: "Calcula la varianza muestral del turno matutino y guárdala en s2_mat."
+  CorrectAnswer: s2_mat <- var(matutino)
+  AnswerTests: "objeto_es('s2_mat', 'var(matutino)')"
+  Hint: "Usa la función var()."
+
+- Class: cmd_question
+  Output: "Construye el intervalo de 95% para σ² del matutino y guárdalo en ic_var_mat. Truco: al dividir entre qchisq(c(0.975, 0.025), df = 34) obtienes primero el límite inferior y después el superior. Escribe: ic_var_mat <- 34 * s2_mat / qchisq(c(0.975, 0.025), df = 34)"
+  CorrectAnswer: ic_var_mat <- 34 * s2_mat / qchisq(c(0.975, 0.025), df = 34)
+  AnswerTests: "objeto_es('ic_var_mat', '34 * var(matutino) / qchisq(c(0.975, 0.025), df = 34)')"
+  Hint: "n - 1 = 34. Escribe ic_var_mat <- 34 * s2_mat / qchisq(c(0.975, 0.025), df = 34)"
+
+- Class: cmd_question
+  Output: "Si sacas raíz cuadrada a los límites obtienes el intervalo para la DESVIACIÓN ESTÁNDAR σ. Escribe sqrt(ic_var_mat)"
+  CorrectAnswer: sqrt(ic_var_mat)
+  AnswerTests: "valor_es('sqrt(34 * var(matutino) / qchisq(c(0.975, 0.025), df = 34))')"
+  Hint: "Escribe sqrt(ic_var_mat)"
+
+# --- Opción múltiple 3 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "La varianza muestral es 67.5, pero el intervalo va de 44.2 a 115.9: NO es simétrico alrededor de s². ¿Por qué?"
+  AnswerChoices: Porque la distribución ji-cuadrada es asimétrica;Porque la varianza muestral siempre está mal calculada;Porque usamos la distribución t de Student;Porque la muestra tiene menos de 100 datos
+  CorrectAnswer: Porque la distribución ji-cuadrada es asimétrica
+  AnswerTests: "omnitest(correctVal='Porque la distribución ji-cuadrada es asimétrica')"
+  Hint: "Piensa en la forma de la distribución que usamos para construir el intervalo."
+
+- Class: text
+  Output: "Para comparar la variabilidad de DOS poblaciones se estima la razón σ1²/σ2² con la distribución F. En R, var.test(x, y)$conf.int da el intervalo de 95%. Si el intervalo contiene el 1, las varianzas podrían ser iguales; si está completamente arriba de 1, el primer grupo es más variable."
+
+- Class: cmd_question
+  Output: "Calcula el intervalo de 95% para la razón de varianzas (matutino / vespertino) y guárdalo en ic_razon_var."
+  CorrectAnswer: ic_razon_var <- var.test(matutino, vespertino)$conf.int
+  AnswerTests: "objeto_es('ic_razon_var', 'var.test(matutino, vespertino)$conf.int'); usa_funcion('var.test')"
+  Hint: "ic_razon_var <- var.test(matutino, vespertino)$conf.int"
+
+- Class: text_question
+  Output: "El intervalo va de aproximadamente 0.27 a 1.13. ¿El valor 1 (varianzas iguales) es un valor plausible para σ1²/σ2²? Responde si o no."
+  CorrectAnswer: si
+  AnswerTests: "texto_es(c('si', 'sí'))"
+  Hint: "Revisa si el 1 está entre 0.27 y 1.13."
+
+# ------------------------------------------------------------------
+# ACTIVIDAD INTEGRADORA
+# ------------------------------------------------------------------
+- Class: text
+  Output: "ACTIVIDAD INTEGRADORA. Un equipo de desarrollo midió 25 veces el tiempo de ejecución (en milisegundos) de dos algoritmos de ordenamiento: algoritmo_1 y algoritmo_2. Quieren estimar cuánto difieren sus tiempos medios."
+
+- Class: cmd_question
+  Output: "Construye el intervalo de 95% para la diferencia de medias (algoritmo_1 - algoritmo_2) y guárdalo en ic_algoritmos."
+  CorrectAnswer: ic_algoritmos <- t.test(algoritmo_1, algoritmo_2)$conf.int
+  AnswerTests: "objeto_es('ic_algoritmos', 't.test(algoritmo_1, algoritmo_2)$conf.int', 1e-3)"
+  Hint: "Aplica lo que hiciste con los turnos, cambiando los vectores."
+
+- Class: exact_question
+  Output: "¿Cuál es el límite INFERIOR del intervalo? Redondea a 2 decimales (incluye el signo)."
+  CorrectAnswer: -16.28
+  AnswerTests: "num_cercano(-16.28, 0.01)"
+  Hint: "Escribe ic_algoritmos[1] en la consola."
+
+- Class: mult_question
+  Output: "El intervalo va de aproximadamente -16.28 a 2.12 ms. ¿Qué pueden concluir los desarrolladores?"
+  AnswerChoices: El intervalo contiene el 0, así que la diferencia real podría favorecer a cualquiera de los dos y no podemos estimar cuál es más rápido;El algoritmo 1 es 16.28 ms más rápido siempre;El algoritmo 2 es más rápido porque el límite superior es positivo;Los dos algoritmos tardan exactamente lo mismo
+  CorrectAnswer: El intervalo contiene el 0, así que la diferencia real podría favorecer a cualquiera de los dos y no podemos estimar cuál es más rápido
+  AnswerTests: "omnitest(correctVal='El intervalo contiene el 0, así que la diferencia real podría favorecer a cualquiera de los dos y no podemos estimar cuál es más rápido')"
+  Hint: "Fíjate si el intervalo incluye valores negativos, el cero y valores positivos."
+
+# ------------------------------------------------------------------
+# RESUMEN
+# ------------------------------------------------------------------
+- Class: text
+  Output: "RESUMEN: 1) Para dos poblaciones estimamos DIFERENCIAS: μ1 - μ2 con x̄1 - x̄2 y p1 - p2 con p̂1 - p̂2. 2) t.test(x, y)$conf.int da el intervalo para la diferencia de medias (Welch). 3) Si el intervalo de una diferencia contiene el 0, no podemos estimar cuál grupo es mayor. 4) El intervalo para σ² usa la ji-cuadrada y no es simétrico. 5) var.test(x, y)$conf.int estima la razón σ1²/σ2²; el valor de referencia es 1."
+
+- Class: text
+  Output: "¡Terminaste la Lección 2! En la Lección 3 estudiarás cómo el nivel de confianza y el tamaño de muestra afectan la precisión."

@@ -1,0 +1,214 @@
+- Class: meta
+  Course: Proyecto 3 Equipo I
+  Lesson: Estimacion 1 Una Poblacion
+  Author: Brandon López García, Efrén Jovany Nava Alemán, Juan Carlos Coutiño Barragán
+  Type: Standard
+  Organization: UACJ - IIT - Ingenieria de Software
+  Version: 2.4.5
+
+# ------------------------------------------------------------------
+# OBJETIVO
+# ------------------------------------------------------------------
+- Class: text
+  Output: "Bienvenido a la Lección 1: Estimación puntual e intervalos para una población. OBJETIVO: al terminar podrás distinguir población, muestra, parámetro y estimador; calcular estimaciones puntuales; describir las características de un buen estimador; y construir e interpretar intervalos de confianza para una media y para una proporción."
+
+- Class: text
+  Output: "Contexto: queremos conocer el tiempo de traslado (en minutos) de los 2000 estudiantes del IIT a la universidad. Ese conjunto completo es la POBLACIÓN. Un número que describe a la población, como su media, es un PARÁMETRO."
+
+- Class: text
+  Output: "En la vida real casi nunca conocemos toda la población. Para esta lección la simulamos en el objeto poblacion_traslado, así podremos comparar el parámetro verdadero con nuestras estimaciones."
+
+# --- Código: parámetro ---------------------------------------------
+- Class: cmd_question
+  Output: "Calcula la media de la población usando mean() sobre poblacion_traslado."
+  CorrectAnswer: mean(poblacion_traslado)
+  AnswerTests: "valor_es('mean(poblacion_traslado)')"
+  Hint: "Escribe mean(poblacion_traslado)"
+
+# --- Opción múltiple 1 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "El valor que acabas de obtener (la media de los 2000 estudiantes) es un:"
+  AnswerChoices: parámetro;estimador;estadístico muestral;intervalo de confianza
+  CorrectAnswer: parámetro
+  AnswerTests: "omnitest(correctVal='parámetro')"
+  Hint: "Describe a TODA la población, no a una muestra."
+
+- Class: text
+  Output: "Como normalmente no podemos medir a todos, tomamos una MUESTRA. El objeto traslado contiene el tiempo de 40 estudiantes elegidos al azar. Un ESTIMADOR es una regla que usa la muestra para aproximar el parámetro; por ejemplo, la media muestral x̄ estima a la media poblacional μ."
+
+# --- Código: estimación puntual ------------------------------------
+- Class: cmd_question
+  Output: "Calcula la media de la muestra traslado y guárdala en un objeto llamado xbarra."
+  CorrectAnswer: xbarra <- mean(traslado)
+  AnswerTests: "objeto_es('xbarra', 'mean(traslado)')"
+  Hint: "Usa xbarra <- mean(traslado)"
+
+- Class: cmd_question
+  Output: "Escribe xbarra en la consola para ver su valor."
+  CorrectAnswer: xbarra
+  AnswerTests: "valor_es('xbarra')"
+  Hint: "Solo escribe xbarra y presiona Enter."
+
+# --- Numérica 1 -----------------------------------------------------
+- Class: exact_question
+  Output: "¿Cuál es la estimación puntual del tiempo medio de traslado? Escribe xbarra redondeado a 2 decimales."
+  CorrectAnswer: 30.06
+  AnswerTests: "num_cercano(30.06, 0.01)"
+  Hint: "Observa el valor de xbarra que imprimiste y redondea a dos decimales."
+
+# --- Opción múltiple 2 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "¿Qué describe mejor a xbarra?"
+  AnswerChoices: Una estimación puntual de la media poblacional;El valor exacto de la media poblacional;Un parámetro de la población;El margen de error de la estimación
+  CorrectAnswer: Una estimación puntual de la media poblacional
+  AnswerTests: "omnitest(correctVal='Una estimación puntual de la media poblacional')"
+  Hint: "xbarra se calculó con 40 datos, no con los 2000."
+
+- Class: text
+  Output: "Compara xbarra con la media poblacional: son parecidas, pero no iguales. Otra muestra daría otro xbarra. Por eso nos interesan las CARACTERÍSTICAS de un buen estimador: 1) INSESGADO: en promedio acierta al parámetro; 2) EFICIENTE: tiene poca variabilidad; 3) CONSISTENTE: se acerca al parámetro cuando n crece."
+
+# --- Código: simulación con semilla --------------------------------
+- Class: cmd_question
+  Output: "Vamos a simular muchas muestras. Para que los resultados sean reproducibles, fija la semilla escribiendo set.seed(123)"
+  CorrectAnswer: set.seed(123)
+  AnswerTests: "omnitest(correctExpr='set.seed(123)')"
+  Hint: "Escribe exactamente set.seed(123)"
+
+- Class: cmd_question
+  Output: "Ahora toma 1000 muestras de tamaño 40 de la población y guarda la media de cada una en medias_sim. Escribe: medias_sim <- replicate(1000, mean(sample(poblacion_traslado, 40)))"
+  CorrectAnswer: medias_sim <- replicate(1000, mean(sample(poblacion_traslado, 40)))
+  AnswerTests: "objeto_cumple('medias_sim', 'is.numeric(medias_sim) && length(medias_sim) == 1000')"
+  Hint: "Copia la instrucción tal como aparece: replicate() repite 1000 veces el cálculo."
+
+# --- Figura ----------------------------------------------------------
+- Class: figure
+  Output: "Observa el histograma de las 1000 medias. La línea roja es la media poblacional (el parámetro) y la línea azul punteada es el promedio de las 1000 medias."
+  Figure: grafica_insesgamiento.R
+  FigureType: new
+
+# --- Opción múltiple 3 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "Las dos líneas prácticamente coinciden. ¿Qué característica del estimador x̄ ilustra la gráfica?"
+  AnswerChoices: Es insesgado;Es consistente;Tiene nivel de confianza de 95%;Siempre es igual al parámetro
+  CorrectAnswer: Es insesgado
+  AnswerTests: "omnitest(correctVal='Es insesgado')"
+  Hint: "En PROMEDIO, las medias muestrales aciertan al parámetro."
+
+# --- Respuesta exacta (texto) --------------------------------------
+- Class: text_question
+  Output: "Escribe en una palabra: ¿cómo se llama la característica de un estimador que se acerca cada vez más al parámetro cuando aumenta el tamaño de muestra?"
+  CorrectAnswer: consistente
+  AnswerTests: "texto_es(c('consistente', 'consistencia'))"
+  Hint: "Es la tercera característica que mencionamos."
+
+# ------------------------------------------------------------------
+# INTERVALO DE CONFIANZA PARA LA MEDIA
+# ------------------------------------------------------------------
+- Class: text
+  Output: "Una estimación puntual no dice qué tan precisa es. Un INTERVALO DE CONFIANZA agrega un margen de error: x̄ ± t × s/√n. Usamos la distribución t de Student con n - 1 grados de libertad porque desconocemos la desviación estándar poblacional σ y la estimamos con s."
+
+- Class: cmd_question
+  Output: "Calcula la desviación estándar de la muestra traslado y guárdala en s."
+  CorrectAnswer: s <- sd(traslado)
+  AnswerTests: "objeto_es('s', 'sd(traslado)')"
+  Hint: "Usa la función sd()."
+
+- Class: cmd_question
+  Output: "Guarda en n el tamaño de la muestra traslado."
+  CorrectAnswer: n <- length(traslado)
+  AnswerTests: "objeto_es('n', 'length(traslado)')"
+  Hint: "La función length() cuenta los elementos de un vector."
+
+- Class: cmd_question
+  Output: "Para 95% de confianza queda 2.5% en cada cola. Guarda en t_crit el valor crítico: qt(0.975, df = n - 1)"
+  CorrectAnswer: t_crit <- qt(0.975, df = n - 1)
+  AnswerTests: "objeto_es('t_crit', 'qt(0.975, df = 39)')"
+  Hint: "Escribe t_crit <- qt(0.975, df = n - 1)"
+
+- Class: cmd_question
+  Output: "Construye el intervalo y guárdalo en ic_media. Con c(-1, 1) obtienes ambos límites a la vez: ic_media <- xbarra + c(-1, 1) * t_crit * s / sqrt(n)"
+  CorrectAnswer: ic_media <- xbarra + c(-1, 1) * t_crit * s / sqrt(n)
+  AnswerTests: "objeto_es('ic_media', 'mean(traslado) + c(-1, 1) * qt(0.975, 39) * sd(traslado) / sqrt(40)')"
+  Hint: "Revisa que uses xbarra, t_crit, s y sqrt(n)."
+
+- Class: cmd_question
+  Output: "R puede calcular el mismo intervalo con t.test(). Compruébalo escribiendo t.test(traslado)$conf.int"
+  CorrectAnswer: t.test(traslado)$conf.int
+  AnswerTests: "valor_es('t.test(traslado)$conf.int'); usa_funcion('t.test')"
+  Hint: "Escribe t.test(traslado)$conf.int . El símbolo $ extrae solo el intervalo."
+
+# --- Interpretación 1 -----------------------------------------------
+- Class: mult_question
+  Output: "El intervalo va de aproximadamente 26.99 a 33.14 minutos. ¿Cuál es la interpretación correcta?"
+  AnswerChoices: Con 95% de confianza, el tiempo MEDIO de traslado de todos los estudiantes del IIT está entre 26.99 y 33.14 minutos;El 95% de los estudiantes tarda entre 26.99 y 33.14 minutos;Hay 95% de probabilidad de que xbarra esté entre 26.99 y 33.14;El intervalo contiene el 95% de los datos de la muestra
+  CorrectAnswer: Con 95% de confianza, el tiempo MEDIO de traslado de todos los estudiantes del IIT está entre 26.99 y 33.14 minutos
+  AnswerTests: "omnitest(correctVal='Con 95% de confianza, el tiempo MEDIO de traslado de todos los estudiantes del IIT está entre 26.99 y 33.14 minutos')"
+  Hint: "El intervalo estima un PARÁMETRO (la media poblacional), no describe a cada estudiante."
+
+# ------------------------------------------------------------------
+# INTERVALO DE CONFIANZA PARA UNA PROPORCIÓN
+# ------------------------------------------------------------------
+- Class: text
+  Output: "Ahora estimaremos una PROPORCIÓN. El vector usa_camion indica con 1 si el estudiante usa transporte público y con 0 si no. La proporción muestral p̂ es la media de ese vector, y el intervalo de 95% es p̂ ± z × √(p̂(1 - p̂)/n), con z = qnorm(0.975)."
+
+- Class: cmd_question
+  Output: "Calcula la proporción muestral de estudiantes que usan camión y guárdala en p_gorro."
+  CorrectAnswer: p_gorro <- mean(usa_camion)
+  AnswerTests: "objeto_es('p_gorro', 'mean(usa_camion)')"
+  Hint: "La media de un vector de ceros y unos es la proporción de unos: mean(usa_camion)"
+
+# --- Numérica 2 -----------------------------------------------------
+- Class: exact_question
+  Output: "¿Cuántos de los 40 estudiantes de la muestra usan camión? (Puedes calcularlo con sum(usa_camion) antes de responder.)"
+  CorrectAnswer: 8
+  AnswerTests: "num_cercano(8, 0)"
+  Hint: "sum(usa_camion) suma los unos."
+
+# --- PREGUNTA CON MÚLTIPLES HINTS (función en funciones/funciones_hints.R)
+- Class: cmd_question
+  Output: "Construye el intervalo de 95% para la proporción y guárdalo en ic_prop. Usa p_gorro, n, qnorm(), sqrt() y c(-1, 1)."
+  CorrectAnswer: ic_prop <- p_gorro + c(-1, 1) * qnorm(0.975) * sqrt(p_gorro * (1 - p_gorro) / n)
+  AnswerTests: test_ic_proporcion()
+  Hint: "Estructura: estimación + c(-1, 1) * valor crítico * error estándar."
+
+# --- Interpretación 2 -----------------------------------------------
+- Class: mult_question
+  Output: "Escribe ic_prop si quieres verlo: va de aproximadamente 0.076 a 0.324. ¿Qué podemos concluir?"
+  AnswerChoices: Con 95% de confianza, entre 7.6% y 32.4% de todos los estudiantes del IIT usan camión;Exactamente 20% de los estudiantes del IIT usa camión;Si tomamos otra muestra obtendremos otra vez p_gorro = 0.20;El 95% de los estudiantes usa camión
+  CorrectAnswer: Con 95% de confianza, entre 7.6% y 32.4% de todos los estudiantes del IIT usan camión
+  AnswerTests: "omnitest(correctVal='Con 95% de confianza, entre 7.6% y 32.4% de todos los estudiantes del IIT usan camión')"
+  Hint: "0.20 es solo la estimación puntual; el intervalo expresa la incertidumbre sobre la proporción de la población."
+
+# ------------------------------------------------------------------
+# ACTIVIDAD INTEGRADORA
+# ------------------------------------------------------------------
+- Class: text
+  Output: "ACTIVIDAD INTEGRADORA. El vector horas_estudio contiene las horas de estudio semanales de otros 40 estudiantes. Aplicarás todo lo anterior sin instrucciones paso a paso."
+
+- Class: cmd_question
+  Output: "Construye el intervalo de 95% para la media de horas_estudio y guárdalo en ic_estudio. Puedes usar la fórmula con qt() o la función t.test()."
+  CorrectAnswer: ic_estudio <- t.test(horas_estudio)$conf.int
+  AnswerTests: "objeto_es('ic_estudio', 't.test(horas_estudio)$conf.int', 1e-3)"
+  Hint: "Opción rápida: ic_estudio <- t.test(horas_estudio)$conf.int"
+
+- Class: exact_question
+  Output: "¿Cuánto mide el ANCHO del intervalo (límite superior menos inferior)? Redondea a 2 decimales. Sugerencia: diff(ic_estudio)"
+  CorrectAnswer: 2.75
+  AnswerTests: "num_cercano(2.75, 0.01)"
+  Hint: "Calcula diff(ic_estudio) en la consola y redondea."
+
+- Class: mult_question
+  Output: "¿Cuál es la interpretación correcta de ic_estudio?"
+  AnswerChoices: Con 95% de confianza, el promedio de horas de estudio semanales de la población está entre 11.06 y 13.81 horas;Todos los estudiantes estudian entre 11.06 y 13.81 horas;El 95% de la muestra estudia entre 11.06 y 13.81 horas;La media muestral puede ser cualquier valor fuera del intervalo
+  CorrectAnswer: Con 95% de confianza, el promedio de horas de estudio semanales de la población está entre 11.06 y 13.81 horas
+  AnswerTests: "omnitest(correctVal='Con 95% de confianza, el promedio de horas de estudio semanales de la población está entre 11.06 y 13.81 horas')"
+  Hint: "El intervalo es sobre la MEDIA de la población."
+
+# ------------------------------------------------------------------
+# RESUMEN
+# ------------------------------------------------------------------
+- Class: text
+  Output: "RESUMEN: 1) Un parámetro describe a la población; un estimador usa la muestra para aproximarlo. 2) La estimación puntual (x̄, p̂) es un solo número. 3) Un buen estimador es insesgado, eficiente y consistente. 4) Intervalo para la media: x̄ ± t × s/√n (o t.test()$conf.int). 5) Intervalo para una proporción: p̂ ± z × √(p̂(1 - p̂)/n). 6) El nivel de confianza se refiere al método: 95% de los intervalos construidos así contendrían al parámetro."
+
+- Class: text
+  Output: "¡Terminaste la Lección 1! En la Lección 2 estimarás diferencias entre dos poblaciones."

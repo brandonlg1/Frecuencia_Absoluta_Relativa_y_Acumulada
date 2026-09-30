@@ -1,0 +1,208 @@
+- Class: meta
+  Course: Proyecto 3 Equipo I
+  Lesson: Estimacion 3 Confianza y Muestra
+  Author: Brandon López García, Efrén Jovany Nava Alemán, Juan Carlos Coutiño Barragán
+  Type: Standard
+  Organization: UACJ - IIT - Ingenieria de Software
+  Version: 2.4.5
+
+# ------------------------------------------------------------------
+# OBJETIVO
+# ------------------------------------------------------------------
+- Class: text
+  Output: "Bienvenido a la Lección 3: Confianza, precisión y tamaño de muestra. OBJETIVO: al terminar podrás explicar qué significa el nivel de confianza, calcular el margen de error, comparar intervalos de 90%, 95% y 99%, describir el efecto del tamaño de muestra en la precisión y determinar el tamaño de muestra necesario para una estimación."
+
+- Class: text
+  Output: "Contexto: el vector tiempos_carga contiene el tiempo de carga (en segundos) de la app del campus medido en 50 accesos. Por registros históricos del servidor sabemos que la desviación estándar poblacional es sigma = 0.8 s. Como sigma es conocida, usaremos la distribución normal (z)."
+
+- Class: text
+  Output: "El NIVEL DE CONFIANZA describe al MÉTODO, no a un intervalo en particular: si repitiéramos el muestreo muchas veces y construyéramos un intervalo de 95% con cada muestra, aproximadamente 95% de esos intervalos contendría al parámetro verdadero."
+
+# --- Opción múltiple 1 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "¿Qué significa construir un intervalo con 95% de confianza?"
+  AnswerChoices: Que aproximadamente 95% de los intervalos construidos con este método contendrían al parámetro;Que hay 95% de probabilidad de que la media muestral sea correcta;Que el 95% de los datos queda dentro del intervalo;Que el error de la estimación es de 5%
+  CorrectAnswer: Que aproximadamente 95% de los intervalos construidos con este método contendrían al parámetro
+  AnswerTests: "omnitest(correctVal='Que aproximadamente 95% de los intervalos construidos con este método contendrían al parámetro')"
+  Hint: "La confianza se refiere a lo que pasaría al repetir el procedimiento muchas veces."
+
+# ------------------------------------------------------------------
+# NIVEL DE CONFIANZA Y VALOR CRÍTICO
+# ------------------------------------------------------------------
+- Class: text
+  Output: "El valor crítico z deja (1 - confianza)/2 en cada cola. Para 90% usamos qnorm(0.95), para 95% qnorm(0.975) y para 99% qnorm(0.995)."
+
+- Class: cmd_question
+  Output: "Calcula los tres valores críticos en un solo vector y guárdalo en z: z <- qnorm(c(0.95, 0.975, 0.995))"
+  CorrectAnswer: z <- qnorm(c(0.95, 0.975, 0.995))
+  AnswerTests: "objeto_es('z', 'qnorm(c(0.95, 0.975, 0.995))')"
+  Hint: "z <- qnorm(c(0.95, 0.975, 0.995))"
+
+- Class: cmd_question
+  Output: "Escribe z para ver los tres valores críticos."
+  CorrectAnswer: z
+  AnswerTests: "valor_es('qnorm(c(0.95, 0.975, 0.995))')"
+  Hint: "Solo escribe z"
+
+# --- Opción múltiple 2 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "Observa z (1.645, 1.960 y 2.576). ¿Qué ocurre con el valor crítico al aumentar el nivel de confianza?"
+  AnswerChoices: Aumenta;Disminuye;No cambia;Se vuelve negativo
+  CorrectAnswer: Aumenta
+  AnswerTests: "omnitest(correctVal='Aumenta')"
+  Hint: "Compara 1.645 con 2.576."
+
+# ------------------------------------------------------------------
+# MARGEN DE ERROR Y PRECISIÓN
+# ------------------------------------------------------------------
+- Class: text
+  Output: "El MARGEN DE ERROR es la mitad del ancho del intervalo: E = z × sigma / √n. La PRECISIÓN es lo contrario del margen de error: un intervalo más angosto es más preciso."
+
+- Class: cmd_question
+  Output: "Calcula la media muestral de tiempos_carga y guárdala en xbarra."
+  CorrectAnswer: xbarra <- mean(tiempos_carga)
+  AnswerTests: "objeto_es('xbarra', 'mean(tiempos_carga)')"
+  Hint: "xbarra <- mean(tiempos_carga)"
+
+- Class: cmd_question
+  Output: "Calcula los tres márgenes de error (90%, 95% y 99%) y guárdalos en E. Usa el vector z, sigma y el tamaño de muestra: E <- z * sigma / sqrt(length(tiempos_carga))"
+  CorrectAnswer: E <- z * sigma / sqrt(length(tiempos_carga))
+  AnswerTests: "objeto_es('E', 'qnorm(c(0.95, 0.975, 0.995)) * 0.8 / sqrt(50)')"
+  Hint: "E <- z * sigma / sqrt(length(tiempos_carga))"
+
+# --- Numérica 1 -----------------------------------------------------
+- Class: exact_question
+  Output: "¿Cuál es el margen de error con 95% de confianza (el segundo elemento de E)? Redondea a 3 decimales."
+  CorrectAnswer: 0.222
+  AnswerTests: "num_cercano(0.222, 0.001)"
+  Hint: "Escribe E[2] en la consola y redondea."
+
+- Class: cmd_question
+  Output: "Construye los tres intervalos en una tabla con cbind() y guárdala en intervalos: intervalos <- cbind(inferior = xbarra - E, superior = xbarra + E)"
+  CorrectAnswer: intervalos <- cbind(inferior = xbarra - E, superior = xbarra + E)
+  AnswerTests: "objeto_es('intervalos', 'cbind(mean(tiempos_carga) - qnorm(c(0.95, 0.975, 0.995)) * 0.8 / sqrt(50), mean(tiempos_carga) + qnorm(c(0.95, 0.975, 0.995)) * 0.8 / sqrt(50))')"
+  Hint: "intervalos <- cbind(inferior = xbarra - E, superior = xbarra + E)"
+
+- Class: cmd_question
+  Output: "Escribe intervalos para ver la tabla. Cada fila corresponde a 90%, 95% y 99%."
+  CorrectAnswer: intervalos
+  AnswerTests: "valor_es('intervalos')"
+  Hint: "Solo escribe intervalos"
+
+# --- Figura 1 --------------------------------------------------------
+- Class: figure
+  Output: "Observa los tres intervalos graficados. Todos están centrados en la misma media muestral."
+  Figure: grafica_niveles.R
+  FigureType: new
+
+# --- Interpretación 1 -----------------------------------------------
+- Class: mult_question
+  Output: "Al pasar de 90% a 99% de confianza, ¿qué ocurre?"
+  AnswerChoices: El intervalo se hace más ancho, ganamos confianza pero perdemos precisión;El intervalo se hace más angosto y más preciso;La media muestral cambia;El intervalo no cambia porque la muestra es la misma
+  CorrectAnswer: El intervalo se hace más ancho, ganamos confianza pero perdemos precisión
+  AnswerTests: "omnitest(correctVal='El intervalo se hace más ancho, ganamos confianza pero perdemos precisión')"
+  Hint: "Compara la longitud de la barra roja (99%) con la verde (90%)."
+
+# ------------------------------------------------------------------
+# EFECTO DEL TAMAÑO DE MUESTRA
+# ------------------------------------------------------------------
+- Class: text
+  Output: "¿Cómo ganar precisión sin perder confianza? Aumentando n. Como n está dentro de una raíz en el denominador, el margen de error disminuye proporcionalmente a 1/√n."
+
+- Class: cmd_question
+  Output: "Calcula el margen de error de 95% para tamaños de muestra 25, 100 y 400, y guárdalo en E_n: E_n <- qnorm(0.975) * sigma / sqrt(c(25, 100, 400))"
+  CorrectAnswer: E_n <- qnorm(0.975) * sigma / sqrt(c(25, 100, 400))
+  AnswerTests: "objeto_es('E_n', 'qnorm(0.975) * 0.8 / sqrt(c(25, 100, 400))')"
+  Hint: "E_n <- qnorm(0.975) * sigma / sqrt(c(25, 100, 400))"
+
+# --- Numérica 2 -----------------------------------------------------
+- Class: exact_question
+  Output: "Observa E_n. Al pasar de n = 25 a n = 100 (cuatro veces más datos), ¿cuántas veces más PEQUEÑO se hizo el margen de error? Puedes calcular E_n[1] / E_n[2]."
+  CorrectAnswer: 2
+  AnswerTests: "num_cercano(2, 0.01)"
+  Hint: "Divide E_n[1] entre E_n[2]."
+
+# --- Opción múltiple 3 (conceptual) --------------------------------
+- Class: mult_question
+  Output: "Entonces, para reducir el margen de error a la MITAD, el tamaño de muestra debe:"
+  AnswerChoices: Multiplicarse por 4;Multiplicarse por 2;Reducirse a la mitad;Multiplicarse por 8
+  CorrectAnswer: Multiplicarse por 4
+  AnswerTests: "omnitest(correctVal='Multiplicarse por 4')"
+  Hint: "El margen depende de la raíz de n: raíz de 4 es 2."
+
+# --- Figura 2 --------------------------------------------------------
+- Class: figure
+  Output: "La gráfica muestra el margen de error según n para los tres niveles de confianza. Al inicio la curva baja rápido; después, agregar datos mejora cada vez menos la precisión."
+  Figure: grafica_margen_n.R
+  FigureType: new
+
+# ------------------------------------------------------------------
+# DETERMINACIÓN DEL TAMAÑO DE MUESTRA
+# ------------------------------------------------------------------
+- Class: text
+  Output: "Si despejamos n de E = z × sigma / √n obtenemos el tamaño de muestra para estimar una MEDIA: n = (z × sigma / E)². Como no se pueden tomar fracciones de datos, el resultado SIEMPRE se redondea hacia arriba."
+
+# --- PREGUNTA CON MÚLTIPLES HINTS (función en funciones/funciones_hints.R)
+- Class: cmd_question
+  Output: "El equipo de la app quiere estimar el tiempo medio de carga con 95% de confianza y un margen de error de E = 0.15 s (sigma = 0.8). Calcula el tamaño de muestra necesario y guárdalo en n_media."
+  CorrectAnswer: n_media <- ceiling((qnorm(0.975) * sigma / 0.15)^2)
+  AnswerTests: test_tamano_muestra_media()
+  Hint: "Aplica n = (z * sigma / E)^2 y redondea hacia arriba."
+
+# --- Interpretación 2 -----------------------------------------------
+- Class: mult_question
+  Output: "El resultado es n_media = 110. ¿Cómo se interpreta?"
+  AnswerChoices: Se necesitan al menos 110 mediciones para estimar el tiempo medio de carga con un margen de error máximo de 0.15 s y 95% de confianza;Con 110 mediciones el error de estimación será exactamente cero;Con 110 mediciones el 95% de los tiempos de carga quedará dentro de 0.15 s de la media;Se necesitan 110 mediciones para que la media muestral sea igual a sigma
+  CorrectAnswer: Se necesitan al menos 110 mediciones para estimar el tiempo medio de carga con un margen de error máximo de 0.15 s y 95% de confianza
+  AnswerTests: "omnitest(correctVal='Se necesitan al menos 110 mediciones para estimar el tiempo medio de carga con un margen de error máximo de 0.15 s y 95% de confianza')"
+  Hint: "El tamaño de muestra garantiza un margen de error, no un error nulo."
+
+- Class: text
+  Output: "Para estimar una PROPORCIÓN la fórmula es n = z² × p(1 - p) / E². Si no hay información previa sobre p se usa p = 0.5, porque es el valor que da el tamaño de muestra más grande (enfoque conservador)."
+
+- Class: cmd_question
+  Output: "Calcula el tamaño de muestra para estimar una proporción con 95% de confianza, E = 0.05 y p = 0.5. Guárdalo en n_prop y recuerda redondear hacia arriba con ceiling()."
+  CorrectAnswer: n_prop <- ceiling(qnorm(0.975)^2 * 0.5 * (1 - 0.5) / 0.05^2)
+  AnswerTests: "objeto_es('n_prop', '385')"
+  Hint: "n_prop <- ceiling(qnorm(0.975)^2 * 0.5 * (1 - 0.5) / 0.05^2)"
+
+- Class: exact_question
+  Output: "¿Cuántas personas se necesitan (valor de n_prop)?"
+  CorrectAnswer: 385
+  AnswerTests: "num_cercano(385, 0)"
+  Hint: "Escribe n_prop en la consola."
+
+- Class: mult_question
+  Output: "¿Por qué se usa p = 0.5 cuando no se tiene información previa?"
+  AnswerChoices: Porque p(1 - p) es máximo en 0.5 y así el tamaño de muestra es suficiente para cualquier valor de p;Porque la mitad de la población siempre tiene la característica;Porque así el tamaño de muestra es el más pequeño posible;Porque con 0.5 el nivel de confianza sube a 99%
+  CorrectAnswer: Porque p(1 - p) es máximo en 0.5 y así el tamaño de muestra es suficiente para cualquier valor de p
+  AnswerTests: "omnitest(correctVal='Porque p(1 - p) es máximo en 0.5 y así el tamaño de muestra es suficiente para cualquier valor de p')"
+  Hint: "Calcula mentalmente 0.5 × 0.5 y 0.2 × 0.8. ¿Cuál es mayor?"
+
+# ------------------------------------------------------------------
+# ACTIVIDAD INTEGRADORA
+# ------------------------------------------------------------------
+- Class: text
+  Output: "ACTIVIDAD INTEGRADORA. El equipo quiere estimar la proporción de usuarios que abandonan la app antes de que cargue. Un estudio piloto indicó que p es cercano a 0.2. Desean 99% de confianza y un margen de error de 3 puntos porcentuales (E = 0.03)."
+
+- Class: cmd_question
+  Output: "Calcula el tamaño de muestra necesario y guárdalo en n_integradora. Elige tú el valor crítico correcto para 99%."
+  CorrectAnswer: n_integradora <- ceiling(qnorm(0.995)^2 * 0.2 * 0.8 / 0.03^2)
+  AnswerTests: "objeto_es('n_integradora', '1180')"
+  Hint: "Para 99% usa qnorm(0.995); p = 0.2, E = 0.03 y redondea con ceiling()."
+
+- Class: mult_question
+  Output: "Si NO tuvieran el estudio piloto y usaran p = 0.5, se necesitarían 1844 usuarios en lugar de 1180. ¿Qué conclusión es correcta?"
+  AnswerChoices: La información previa sobre p reduce el tamaño de muestra necesario para la misma confianza y precisión;Con p = 0.5 la estimación sería menos precisa;El estudio piloto aumenta el margen de error;Ambos tamaños dan un nivel de confianza diferente
+  CorrectAnswer: La información previa sobre p reduce el tamaño de muestra necesario para la misma confianza y precisión
+  AnswerTests: "omnitest(correctVal='La información previa sobre p reduce el tamaño de muestra necesario para la misma confianza y precisión')"
+  Hint: "Ambos cálculos usan 99% y E = 0.03; solo cambia el valor de p."
+
+# ------------------------------------------------------------------
+# RESUMEN
+# ------------------------------------------------------------------
+- Class: text
+  Output: "RESUMEN: 1) El nivel de confianza describe qué tan seguido acierta el método. 2) Más confianza = valor crítico mayor = intervalo más ancho (menos precisión). 3) El margen de error es E = z × sigma / √n. 4) Para reducir E a la mitad se necesita cuatro veces más muestra. 5) Tamaño de muestra para una media: n = (z × sigma / E)². Para una proporción: n = z² × p(1 - p) / E², con p = 0.5 si no hay información previa. 6) Siempre redondea n hacia arriba con ceiling()."
+
+- Class: text
+  Output: "¡Terminaste la Lección 3 y el Proyecto 3 de estimación estadística!"
